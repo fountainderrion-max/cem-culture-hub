@@ -156,6 +156,76 @@ export const ROUTE_REGISTRY = Object.freeze([
     integrationTodo: "TODO: Connect secure support ticket intake service."
   }),
   route({
+    path: "/legal/privacy",
+    label: "Privacy",
+    title: "Privacy Policy",
+    summary: "Review platform privacy posture for social, account, and operational data handling.",
+    shell: "public",
+    access: PUBLIC_ACCESS,
+    navGroup: "support",
+    integrationTodo: "TODO: Connect consent ledger and legal policy version tracking."
+  }),
+  route({
+    path: "/legal/terms",
+    label: "Terms",
+    title: "Terms of Service",
+    summary: "Understand platform terms for users, providers, operators, and admins.",
+    shell: "public",
+    access: PUBLIC_ACCESS,
+    navGroup: "support",
+    integrationTodo: "TODO: Connect legal acceptance logging and versioned terms signatures."
+  }),
+  route({
+    path: "/legal/risk-disclosure",
+    label: "Risk Disclosure",
+    title: "Risk Disclosure",
+    summary: "Clarify risk guardrails, automated control boundaries, and user responsibilities.",
+    shell: "public",
+    access: PUBLIC_ACCESS,
+    navGroup: "support",
+    integrationTodo: "TODO: Connect compliance publishing service and acknowledgment events."
+  }),
+  route({
+    path: "/privacy",
+    label: "Privacy",
+    title: "Privacy Policy",
+    summary: "Short-link alias to platform privacy policy.",
+    shell: "public",
+    access: PUBLIC_ACCESS,
+    navGroup: "support",
+    integrationTodo: "TODO: Connect consent ledger and legal policy version tracking."
+  }),
+  route({
+    path: "/terms",
+    label: "Terms",
+    title: "Terms of Service",
+    summary: "Short-link alias to platform terms.",
+    shell: "public",
+    access: PUBLIC_ACCESS,
+    navGroup: "support",
+    integrationTodo: "TODO: Connect legal acceptance logging and versioned terms signatures."
+  }),
+  route({
+    path: "/risk",
+    label: "Risk",
+    title: "Risk Disclosure",
+    summary: "Short-link alias to trading and automation risk disclosures.",
+    shell: "public",
+    access: PUBLIC_ACCESS,
+    navGroup: "support",
+    integrationTodo: "TODO: Connect compliance publishing service and acknowledgment events."
+  }),
+  route({
+    path: "/security",
+    label: "Security",
+    title: "Security and Trust",
+    summary: "Overview of role boundaries, audit concepts, and platform trust posture.",
+    shell: "public",
+    access: PUBLIC_ACCESS,
+    navGroup: "support",
+    integrationTodo: "TODO: Connect security center content and operational trust metrics."
+  }),
+  route({
     path: "/login",
     label: "Log In",
     title: "Member Login",
@@ -809,4 +879,3 @@ export function defaultPathForRole(role) {
   if (role === APP_ROLES.USER) return "/app/feed";
   return "/";
 }
-

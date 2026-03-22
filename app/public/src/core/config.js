@@ -40,7 +40,7 @@
   riskGuardrails: {
     maxDrawdownPercent: 65,
     maxDailyLossPercent: 65,
-    dailyLossCautionPercent: 65,
+    dailyLossCautionPercent: 42.25,
     disableNewEntriesAtDailyLimit: true,
     pauseAutomationOnDrawdownBreach: true,
     disableLadderOnDailyLimit: true,

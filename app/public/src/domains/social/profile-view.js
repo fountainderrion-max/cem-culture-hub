@@ -101,7 +101,7 @@ export function createProfileView(options = {}) {
           <span class="social-avatar social-avatar-lg">${esc(profile.avatar)}</span>
           <div>
             <h3 class="social-panel-title" style="margin-bottom:0.1rem;">${esc(profile.displayName)}</h3>
-            <p class="social-panel-subtitle">@${esc(profile.handle)} · ${esc(profile.squad)}</p>
+            <p class="social-panel-subtitle">@${esc(profile.handle)}  |  ${esc(profile.squad)}</p>
             <p class="social-panel-subtitle">${esc(profile.bannerSubtitle)}</p>
           </div>
         </div>
@@ -118,7 +118,7 @@ export function createProfileView(options = {}) {
       </div>
       <div class="social-shell-chip-row" style="margin-top:0.45rem;">
         ${(profile.badges || [])
-          .map((badge) => `<span class="social-tag">${esc(`${badge.name} · ${badge.tier}`)}</span>`)
+          .map((badge) => `<span class="social-tag">${esc(`${badge.name}  |  ${badge.tier}`)}</span>`)
           .join("")}
       </div>
     </section>

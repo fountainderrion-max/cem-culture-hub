@@ -546,9 +546,9 @@ export const GROWTH_UNLOCK_LADDER = [
 export const RISK_GUARDRAILS = {
   maxDrawdownPercent: 65,
   maxDailyLossPercent: 65,
-  cautionAtDailyLossLimitPercent: 65,
+  cautionAtDailyLossLimitPercent: 42.25,
   onCautionState: [
-    "Switch state to Caution",
+    "Switch state to Caution at 65% of the daily loss limit",
     "Downgrade scalping to monitor-only",
     "Log threshold event in risk dashboard"
   ],

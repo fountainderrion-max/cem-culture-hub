@@ -29,7 +29,11 @@ loadEnvFile(ENV_BASE_FILE);
 loadEnvFile(ENV_FILE);
 
 const PORT = Number(process.env.PORT || 3000);
-const HOST = process.env.HOST || "127.0.0.1";
+const HOST_INPUT = String(process.env.HOST || "").trim().toLowerCase();
+const HOST =
+  HOST_INPUT === "127.0.0.1" || HOST_INPUT === "localhost"
+    ? "0.0.0.0"
+    : process.env.HOST || "0.0.0.0";
 const PUBLIC_DIR = path.join(__dirname, "public");
 const DATA_DIR = path.join(__dirname, "data");
 const STORE_FILE = path.join(DATA_DIR, "trade-console-store.json");
@@ -71,6 +75,14 @@ function envNumber(key, fallback = 0) {
 }
 
 function safePublicConfig() {
+  const maxDailyLossPercent = envNumber("MAX_DAILY_LOSS_PERCENT", 65);
+  const explicitCaution = process.env.DAILY_LOSS_CAUTION_PERCENT;
+  const cautionComputed = Number((maxDailyLossPercent * 0.65).toFixed(2));
+  const dailyLossCautionPercent =
+    typeof explicitCaution === "string" && explicitCaution.trim().length > 0
+      ? envNumber("DAILY_LOSS_CAUTION_PERCENT", cautionComputed)
+      : cautionComputed;
+
   return {
     app: {
       name: process.env.NEXT_PUBLIC_BRAND_NAME || process.env.APP_NAME || "CEM CULTURE",
@@ -116,8 +128,8 @@ function safePublicConfig() {
     },
     riskGuardrails: {
       maxDrawdownPercent: envNumber("MAX_DRAWDOWN_PERCENT", 65),
-      maxDailyLossPercent: envNumber("MAX_DAILY_LOSS_PERCENT", 65),
-      dailyLossCautionPercent: envNumber("DAILY_LOSS_CAUTION_PERCENT", 65),
+      maxDailyLossPercent,
+      dailyLossCautionPercent,
       disableNewEntriesAtDailyLimit: envBool("DISABLE_NEW_ENTRIES_AT_DAILY_LIMIT", true),
       pauseAutomationOnDrawdownBreach: envBool("PAUSE_AUTOMATION_ON_DRAWDOWN_BREACH", true),
       disableLadderOnDailyLimit: envBool("DISABLE_LADDER_ON_DAILY_LIMIT", true),

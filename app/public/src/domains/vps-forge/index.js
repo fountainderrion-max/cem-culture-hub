@@ -109,9 +109,13 @@ function renderServersTable(state) {
         <td>${esc(server.publicIp)}</td>
         <td><div class="vf-actions">
           <button class="vf-btn" data-action="restart-server" data-server-id="${esc(server.id)}">Restart</button>
+          <button class="vf-btn" data-action="reconnect-broker" data-server-id="${esc(server.id)}">Reconnect Broker</button>
           <button class="vf-btn" data-action="clone-server" data-server-id="${esc(server.id)}">Clone</button>
           <button class="vf-btn" data-kind="danger" data-action="reinstall-server" data-server-id="${esc(server.id)}">Reinstall</button>
           <button class="vf-btn" data-action="resync-server-config" data-server-id="${esc(server.id)}">Resync Config</button>
+          <button class="vf-btn" data-action="deploy-backup" data-server-id="${esc(server.id)}">Backup Deploy</button>
+          <button class="vf-btn" data-action="activate-failover" data-server-id="${esc(server.id)}">Activate Failover</button>
+          <button class="vf-btn" data-action="download-server-logs" data-server-id="${esc(server.id)}">Download Logs</button>
         </div></td>
       </tr>`;
     }).join("")}
@@ -123,14 +127,17 @@ function renderLaunchForm(state) {
       <div class="vf-field"><label for="vf-server-name">Server Name</label><input id="vf-server-name" name="serverName" required placeholder="Ex: Atlas Relay" /></div>
       <div class="vf-field"><label for="vf-plan-id">Plan</label><select id="vf-plan-id" name="planId">${state.plans.map((plan) => `<option value="${esc(plan.id)}">${esc(plan.name)}</option>`).join("")}</select></div>
       <div class="vf-field"><label for="vf-region">Region</label><select id="vf-region" name="region">${state.regions.map((region) => `<option value="${esc(region)}">${esc(region)}</option>`).join("")}</select></div>
+      <div class="vf-field"><label for="vf-account">Account</label><select id="vf-account" name="assignedAccount">${state.accounts.map((account) => `<option value="${esc(account)}">${esc(account)}</option>`).join("")}</select></div>
+      <div class="vf-field"><label for="vf-squad">Bots or Squad</label><select id="vf-squad" name="assignedSquad">${state.squads.map((squad) => `<option value="${esc(squad)}">${esc(squad)}</option>`).join("")}</select></div>
       <div class="vf-field"><label for="vf-image">Image</label><select id="vf-image" name="image">${state.images.map((image) => `<option value="${esc(image)}">${esc(image)}</option>`).join("")}</select></div>
+      <div class="vf-field"><label for="vf-auto-heal">Auto-Heal Profile</label><select id="vf-auto-heal" name="autoHealProfile"><option value="aggressive">Aggressive</option><option value="balanced" selected>Balanced</option><option value="manual">Manual</option></select></div>
       <div class="vf-field"><label for="vf-loadout">Terminal Loadout</label><input id="vf-loadout" name="terminalLoadout" placeholder="Ex: MT5 Gold + Index Squad" /></div>
       <div class="vf-field"><label for="vf-notes">Notes</label><input id="vf-notes" name="notes" placeholder="Ex: Switch backup node" /></div>
     </div>
     <div class="vf-form-actions">
       <button class="vf-btn" data-kind="accent" type="submit">Launch Server</button>
       <span class="vf-note">Simulated launch. TODO: wire provisioning API + infrastructure orchestration.</span>
-      <span class="vf-note">User-Supplied fields: server name, notes, and loadout.</span>
+      <span class="vf-note">User-Supplied fields: server name, account, squad, notes, and loadout.</span>
     </div>
   </form>`;
 }
@@ -146,16 +153,51 @@ function renderHealth(state) {
         <span class="vf-status ${esc(tone)}">Health ${esc(score)}</span>
       </header>
       ${metricRow("CPU", server.metrics?.cpu)}
-      ${metricRow("Memory", server.metrics?.memory)}
+      ${metricRow("RAM", server.metrics?.memory)}
       ${metricRow("Disk", server.metrics?.disk)}
       ${metricRow("Latency", clamp((server.metrics?.latencyMs || 0) * 2, 0, 100), "ms x2")}
+      <div class="vf-note">Uptime ${esc(server.uptime)} | Last bot ping ${esc(server.lastBotPing || "n/a")}</div>
+      <div class="vf-note">Broker connectivity: ${esc(server.brokerConnectivity || "Unknown")} | Terminal state: ${esc(server.terminalStatus || "Unknown")} | Auto-restarts: ${esc(server.autoRestartCount || 0)}</div>
       <div class="vf-form-actions">
         <label class="vf-toggle"><input type="checkbox" data-action="toggle-auto-heal" data-server-id="${esc(server.id)}" ${server.autoHeal ? "checked" : ""} />Auto-Heal</label>
+        <button class="vf-btn" type="button" data-action="run-health-check" data-server-id="${esc(server.id)}">Run Health Check</button>
+        <button class="vf-btn" type="button" data-action="sync-versions" data-server-id="${esc(server.id)}">Version Sync</button>
         <button class="vf-btn" type="button" data-action="resync-server-config" data-server-id="${esc(server.id)}">Resync Config</button>
       </div>
       ${(server.alerts || []).length ? `<ul class="vf-alert-list">${server.alerts.map((alert) => `<li><span class="vf-level ${esc(levelTone(alert.level))}">${esc(alert.level)}</span> ${esc(alert.text)}</li>`).join("")}</ul>` : `<div class="vf-empty">No active alerts.</div>`}
     </article>`;
   }).join("")}</div>`;
+}
+
+function renderHostingControls(state) {
+  if (!state.servers.length) return `<div class="vf-empty">No hosting controls available until servers are launched.</div>`;
+  const controlLabels = [
+    ["autoRestartOnCrash", "Auto Restart on Crash"],
+    ["reconnectOnDisconnect", "Reconnect on Disconnect"],
+    ["nightlyHealthChecks", "Nightly Health Checks"],
+    ["versionSync", "Version Sync"],
+    ["backupDeployment", "Backup Deployment"],
+    ["failoverInstance", "Failover Instance"],
+    ["remoteLogDownload", "Remote Log Download"]
+  ];
+  return `<div class="vf-table-wrap"><table class="vf-table"><thead><tr><th>Server</th>${controlLabels.map((item) => `<th>${esc(item[1])}</th>`).join("")}<th>Actions</th></tr></thead><tbody>
+    ${state.servers.map((server) => `<tr>
+      <td><strong>${esc(server.name)}</strong><br /><small>${esc(server.assignedAccount || "No account")} | ${esc(server.assignedSquad || "No squad")}</small></td>
+      ${controlLabels
+        .map((item) => {
+          const enabled = !!server.hostingControls?.[item[0]];
+          return `<td><span class="vf-status ${enabled ? "ok" : "neutral"}">${enabled ? "On" : "Off"}</span></td>`;
+        })
+        .join("")}
+      <td><div class="vf-actions">
+        <button class="vf-btn" data-action="run-health-check" data-server-id="${esc(server.id)}">Health Check</button>
+        <button class="vf-btn" data-action="sync-versions" data-server-id="${esc(server.id)}">Sync Versions</button>
+        <button class="vf-btn" data-action="deploy-backup" data-server-id="${esc(server.id)}">Backup Deploy</button>
+        <button class="vf-btn" data-action="activate-failover" data-server-id="${esc(server.id)}">Failover</button>
+      </div></td>
+    </tr>`).join("")}
+  </tbody></table></div>
+  <p class="vf-note">Placeholder Integration: control toggles represent command intents only until live infrastructure APIs are connected.</p>`;
 }
 
 function renderTerminals(state) {
@@ -229,7 +271,7 @@ function renderShell(root, state) {
           <span class="vf-pill">${esc(serverCount)} servers</span>
           <span class="vf-pill">${esc(terminalCount)} terminals</span>
           <span class="vf-pill">${esc(alertCount)} active alerts</span>
-          <span class="vf-pill">${esc(state.simulatedBadge)}</span>
+          <span class="vf-pill">Simulation</span>
           <span class="vf-pill">User-Supplied</span>
           <span class="vf-pill">Placeholder Integration</span>
         </div>
@@ -240,6 +282,7 @@ function renderShell(root, state) {
         <section class="vf-card" data-span="12"><h3>My Servers</h3>${renderServersTable(state)}</section>
         <section class="vf-card" data-span="5"><h3>Launch Server</h3>${renderLaunchForm(state)}</section>
         <section class="vf-card" data-span="7"><h3>Server Health</h3>${renderHealth(state)}</section>
+        <section class="vf-card" data-span="12"><h3>Hosting Controls</h3>${renderHostingControls(state)}</section>
         <section class="vf-card" data-span="6"><h3>Terminal Manager</h3>${renderTerminals(state)}</section>
         <section class="vf-card" data-span="6"><h3>Deployment Logs</h3>${renderLogs(state)}</section>
       </div>
@@ -310,6 +353,79 @@ function handleClick(state, target) {
     return changed;
   }
 
+  if (action === "reconnect-broker" && serverId) {
+    const changed = mutateServer(state, serverId, (server) => {
+      server.brokerConnectivity = "Reconnecting";
+      server.alerts = server.alerts || [];
+      server.alerts.unshift({ id: makeId("alert"), level: "info", text: "Broker reconnect cycle started (simulated)." });
+    });
+    if (changed) {
+      addLog(state, "info", "My Servers", `Broker reconnect issued for ${serverId}. TODO: connect broker connectivity service.`);
+      state.notice = "Broker reconnect command sent.";
+    }
+    return changed;
+  }
+
+  if (action === "run-health-check" && serverId) {
+    const changed = mutateServer(state, serverId, (server) => {
+      server.alerts = (server.alerts || []).filter((item) => item.level !== "info");
+      server.alerts.unshift({ id: makeId("alert"), level: "success", text: "Nightly health check completed (simulated)." });
+      server.lastBotPing = "12s ago";
+    });
+    if (changed) {
+      addLog(state, "success", "Server Health", `Health check completed for ${serverId}. TODO: connect nightly scheduler and monitoring API.`);
+      state.notice = "Health check complete.";
+    }
+    return changed;
+  }
+
+  if (action === "sync-versions" && serverId) {
+    const changed = mutateServer(state, serverId, (server) => {
+      server.hostingControls = server.hostingControls || {};
+      server.hostingControls.versionSync = true;
+      server.terminalStatus = "Version Synced";
+    });
+    if (changed) {
+      addLog(state, "info", "Server Health", `Version sync started for ${serverId}. TODO: wire terminal version manager.`);
+      state.notice = "Version sync initiated.";
+    }
+    return changed;
+  }
+
+  if (action === "deploy-backup" && serverId) {
+    const changed = mutateServer(state, serverId, (server) => {
+      server.hostingControls = server.hostingControls || {};
+      server.hostingControls.backupDeployment = true;
+      server.alerts = server.alerts || [];
+      server.alerts.unshift({ id: makeId("alert"), level: "info", text: "Backup deployment staged (simulated)." });
+    });
+    if (changed) {
+      addLog(state, "warning", "My Servers", `Backup deployment staged for ${serverId}. TODO: connect backup image restore pipeline.`);
+      state.notice = "Backup deployment staged.";
+    }
+    return changed;
+  }
+
+  if (action === "activate-failover" && serverId) {
+    const changed = mutateServer(state, serverId, (server) => {
+      server.hostingControls = server.hostingControls || {};
+      server.hostingControls.failoverInstance = true;
+      server.status = "running";
+      server.publicIp = server.publicIp === "Pending" ? "Failover Assigned" : server.publicIp;
+    });
+    if (changed) {
+      addLog(state, "critical", "My Servers", `Failover activated for ${serverId} (simulated). TODO: connect failover orchestration API.`);
+      state.notice = "Failover instance activated.";
+    }
+    return changed;
+  }
+
+  if (action === "download-server-logs" && serverId) {
+    addLog(state, "info", "Deployment Logs", `Remote log download requested for ${serverId}. TODO: wire signed log bundle download.`);
+    state.notice = "Remote log download requested.";
+    return true;
+  }
+
   if (action === "resync-terminal" && terminalId) {
     const terminal = state.terminals.find((item) => item.id === terminalId);
     if (!terminal) return false;
@@ -370,6 +486,9 @@ function handleLaunch(state, form) {
   const planId = String(formData.get("planId") || "");
   const region = String(formData.get("region") || "");
   const image = String(formData.get("image") || "");
+  const assignedAccount = String(formData.get("assignedAccount") || "");
+  const assignedSquad = String(formData.get("assignedSquad") || "");
+  const autoHealProfile = String(formData.get("autoHealProfile") || "balanced");
   const terminalLoadout = String(formData.get("terminalLoadout") || "").trim();
   const notes = String(formData.get("notes") || "").trim();
 
@@ -393,14 +512,30 @@ function handleLaunch(state, form) {
     status: "provisioning",
     uptime: "00d 00h",
     publicIp: "Pending",
-    autoHeal: true,
+    assignedAccount,
+    assignedSquad,
+    autoHeal: autoHealProfile !== "manual",
+    hostingControls: {
+      autoRestartOnCrash: autoHealProfile !== "manual",
+      reconnectOnDisconnect: true,
+      nightlyHealthChecks: true,
+      versionSync: autoHealProfile === "aggressive",
+      backupDeployment: false,
+      failoverInstance: false,
+      remoteLogDownload: true
+    },
+    autoRestartCount: 0,
+    brokerConnectivity: "Pending",
+    terminalStatus: "Deploying",
+    lastBotPing: "Pending",
     terminals: 0,
     metrics: { cpu: 8, memory: 14, disk: 9, latencyMs: 25 },
     alerts: [{ id: makeId("alert"), level: "info", text: "Provisioning pipeline queued (simulated)." }]
   });
 
   addLog(state, "info", "Launch Server", `Launch requested for ${serverName} on ${plan.name}. TODO: integrate real VPS provisioning + secrets bootstrap.`);
-  addLog(state, "info", "Launch Server", `Loadout "${terminalLoadout || "None"}" attached. Notes: ${notes || "n/a"} (simulated).`);
+  addLog(state, "info", "Launch Server", `Account "${assignedAccount || "n/a"}" with "${assignedSquad || "n/a"}" assigned. Loadout "${terminalLoadout || "None"}" (simulation).`);
+  addLog(state, "info", "Launch Server", `Auto-heal profile "${autoHealProfile}" set. Notes: ${notes || "n/a"} (simulation).`);
   state.notice = `Launch request accepted for ${serverName}.`;
   form.reset();
   return true;

@@ -391,7 +391,7 @@ function renderMyAccounts(data) {
           return `
             <article class="lv-card">
               <h3>${account.alias}</h3>
-              <p>${account.platform} • ${account.broker} • ${account.server}</p>
+              <p>${account.platform}  -  ${account.broker}  -  ${account.server}</p>
               <div class="lv-chip-row">
                 <span class="lv-chip ${statusClass}">${account.status}</span>
                 <span class="lv-chip">${account.accountNumberMasked}</span>
@@ -652,7 +652,7 @@ function renderProtections(data) {
                     (item) => `
                 <li>
                   <strong>${item.action}</strong><br />
-                  ${item.actor} • ${item.result} • ${formatDate(item.at)}
+                  ${item.actor}  -  ${item.result}  -  ${formatDate(item.at)}
                 </li>
               `
                   )

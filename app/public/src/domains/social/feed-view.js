@@ -11,7 +11,7 @@ function renderFeedPost(post) {
           <span class="social-avatar">${esc(post.author.avatar)}</span>
           <div>
             <p class="social-panel-title" style="margin-bottom:0.1rem;">${esc(post.author.handle)}</p>
-            <p class="social-muted">${esc(post.author.rank)} · ${esc(timeAgo(post.timestamp))}</p>
+            <p class="social-muted">${esc(post.author.rank)}  |  ${esc(timeAgo(post.timestamp))}</p>
           </div>
         </div>
         <div class="social-shell-chip-row">

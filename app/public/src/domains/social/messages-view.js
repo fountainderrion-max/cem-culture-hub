@@ -22,7 +22,7 @@ function renderRequest(item) {
     <article class="social-panel">
       <p class="social-panel-title">${esc(item.handle)}</p>
       <p class="social-panel-subtitle">${esc(item.reason)}</p>
-      <p class="social-muted">${esc(`${item.rank} · ${item.mutuals} mutuals`)}</p>
+      <p class="social-muted">${esc(`${item.rank}  |  ${item.mutuals} mutuals`)}</p>
       <div class="social-action-row">
         <button type="button" class="social-btn social-btn-primary" data-social-action="follow" data-social-count="0" aria-pressed="false">Approve <span>0</span></button>
         <button type="button" class="social-btn">Decline</button>

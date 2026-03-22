@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: trading-ecosystem-app
+    name: cem-culture-hub
     runtime: node
     rootDir: app
     buildCommand: "node -v"
@@ -12,6 +12,20 @@ services:
         value: 10000
       - key: HOST
         value: 0.0.0.0
+      - key: DEFAULT_SIGNUP_ROLE
+        value: user
+      - key: ALLOW_SELF_PROVIDER_SIGNUP
+        value: false
+      - key: ALLOW_SELF_OPERATOR_SIGNUP
+        value: false
+      - key: REQUIRE_ADMIN_PROVIDER_APPROVAL
+        value: true
+      - key: REQUIRE_ADMIN_OPERATOR_APPROVAL
+        value: true
+      - key: ENABLE_SIMULATION_MODE
+        value: true
+      - key: ENABLE_USER_SUPPLIED_MODE
+        value: true
       - key: BASE_URL
         sync: false
       - key: SESSION_SECRET

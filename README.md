@@ -1,149 +1,74 @@
-# Commodity USD Monitor
+# CEM CULTURE - Social Trading Operating System Shell
 
-This workspace includes a PowerShell monitor for:
+## What this repo is
+CEM CULTURE is a premium web shell that combines:
+- public marketing site
+- logged-in social trading application
+- MT4/MT5 Link Vault UX
+- Bot Arena, Squads, and Switch Lab control surfaces
+- VPS Forge hosting command center
+- Provider/Operator War Room
+- Admin console
 
-- `XAUUSD` (Gold vs USD)
-- `XAGUSD` (Silver vs USD)
-- `USOIL` (USD-quoted crude oil proxy)
+This release is designed for commercial distribution of the frontend and API shell while clearly labeling mock/simulated integrations.
 
-Script path:
+## Current stack
+- Runtime: Node.js (`app/server.js`)
+- Frontend: vanilla JS SPA modules in `app/public/src`
+- Styling: tokenized CSS + premium card/layout styles in `app/public/style.css` and `app/public/src/design/*`
+- Data layer: mocked domain models in `app/public/src/data/*`
+- Routing/auth: client route registry in `app/public/src/core/routes.js`, auth context in `app/public/src/core/auth.js`
 
-- `scripts/monitor-commodities.ps1`
-- `scripts/ops/bootstrap-ecosystem.ps1` (multi-agent coordination bootstrap)
+## Commercial readiness posture
+- Default signup role is `user`
+- Provider/operator/admin access is approval-gated
+- Simulation, User-Supplied, and Placeholder Integration badges are used across critical system views
+- Risk guardrails are encoded:
+  - max drawdown: 65%
+  - max daily loss: 65%
+  - caution threshold: 42.25% (65% of daily-loss limit)
+- No live broker, copier, or VPS claims are made unless truly integrated
 
-## What it does
-
-1. Fetches latest prices (live or mock provider).
-2. Appends timestamped snapshots to CSV.
-3. Prints alerts when move size exceeds a configurable percentage threshold.
-
-## Quick start
-
-Run with mock data (works without network):
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\monitor-commodities.ps1 -Provider mock -IntervalSeconds 10 -AlertThresholdPercent 0.3
-```
-
-Run with live data source:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\monitor-commodities.ps1 -Provider stooq -IntervalSeconds 60 -AlertThresholdPercent 0.5
-```
-
-Run once (or finite loops) for testing:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\monitor-commodities.ps1 -Provider mock -Iterations 3 -IntervalSeconds 2
-```
-
-## Output
-
-Default CSV output:
-
-- `.\data\commodity_prices.csv`
-
-Override path with:
-
-```powershell
--OutFile .\data\my_prices.csv
-```
-
-## Provider model (pluggable)
-
-- `stooq`: concrete live provider via HTTP CSV quotes.
-- `mock`: offline fallback generator for local testing.
-
-To add a new provider, extend `Get-ProviderFunction` and implement a new `Get-...Prices` function returning:
-
-- hashtable with keys: `XAUUSD`, `XAGUSD`, `USOIL`
-- numeric values for current prices
-
-## Multi-Agent Setup (Trading Ecosystem)
-
-Use this to help all agents work from the same operating model:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\ops\bootstrap-ecosystem.ps1
-```
-
-This creates shared coordination files under `data/ops/`:
-
-- `agent-tasks.csv`
-- `agent-handoffs.md`
-- `decision-log.md`
-- `incidents.md`
-
-Runbook:
-
-- `docs/TRADING_ECOSYSTEM_AGENT_SETUP.md`
-
----
-
-# MT4 Backtesting Pipeline
-
-This workspace now also includes an MT4 backtesting + optimization pipeline:
-
-- `scripts/mt4/run-pipeline.ps1`
-- `docs/MT4_BACKTEST_RUNBOOK.md`
-
-Quick run:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\mt4\run-pipeline.ps1 -SearchRoot .
-```
-
-Main outputs:
-
-- `data/backtests/ea-inventory.csv`
-- `data/backtests/jobs.csv`
-- `data/backtests/results.csv`
-- `data/backtests/ranked-configurations.csv`
-- `data/backtests/summary.md`
-
----
-
-# Trading Ecosystem App
-
-The `app/` folder hosts an operator trading console that includes:
-
-- typed market context + account/risk inputs,
-- decision engine output (BUY/SELL/HOLD, lot size, SL/TP, confidence),
-- MT4 command queue files for bridge polling,
-- bot memory records so bots can retain context,
-- swarm bus voting so bots can communicate across charts,
-- chart planner that can assign bots across up to 100 charts.
-
-Run local:
-
+## Local run
 ```powershell
 cd app
 node server.js
 ```
 
-Open:
+App health:
+```powershell
+curl http://127.0.0.1:3000/api/health
+```
 
-- `http://localhost:3000`
+## Render deployment baseline
+- Service type: `Web Service`
+- Root directory: `app`
+- Build command: `node -v`
+- Start command: `node server.js`
+- Must bind: `HOST=0.0.0.0`
+- Must expose: `PORT` (Render injects value)
 
-Main API endpoints:
+See:
+- `app/render.yaml`
+- `docs/render-production-settings.md`
+- `docs/commercial-distribution-readiness.md`
 
-- `/api/state`
-- `/api/decide`
-- `/api/commands/queue`
-- `/api/commands/{id}/ack`
-- `/api/results`
-- `/api/swarm/memory`
-- `/api/swarm/event`
-- `/api/swarm/consensus`
-- `/api/swarm/plan`
-- `/api/phone/state`
-- `/api/phone/ask`
-- `/api/phone/message`
-- `/api/phone/reply`
-- `/api/phone/sms/webhook?token=...`
-- `/api/health`
+## Key folders
+- `app/public/src/domains/marketing` - public routes
+- `app/public/src/domains/social` - feed/profile/messages/challenges/leaderboard
+- `app/public/src/domains/link-vault` - account linking and analytics shell
+- `app/public/src/domains/bot-arena` - bots, loadouts, remote control shell
+- `app/public/src/domains/switch-lab` - switch catalog and unlock ladders
+- `app/public/src/domains/vps-forge` - VPS plans, launch, health, terminal manager
+- `app/public/src/domains/provider` - provider/operator tools
+- `app/public/src/domains/admin` - admin tools
 
-Deployment guide:
+## Integration boundaries
+The following are shell-level with placeholders unless backend services are wired:
+- MT4/MT5 live broker linking
+- copier execution
+- VPS provisioning and lifecycle automation
+- payment settlement
+- legal acceptance logging
 
-- `docs/TRADING_APP_DEPLOYMENT.md`
-- `docs/PHONE_CONTROL_RUNBOOK.md`
+Use TODO labels and badge states in UI to preserve trust and compliance messaging.

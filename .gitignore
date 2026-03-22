@@ -1,0 +1,19 @@
+﻿# local env / secrets
+app/.env.local
+app/.env.*.local
+
+# runtime data
+app/data/*.json
+app/data/*.jsonl
+app/data/mt4/*.jsonl
+
+# node
+**/node_modules/
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+
+# large local folders not needed for deploy
+backups/

@@ -1,0 +1,49 @@
+{
+  "symbols": ["XAUUSD", "XAGUSD"],
+  "timeframes": ["M15", "H1"],
+  "defaultDeposit": 50,
+  "splits": [
+    {
+      "name": "train_2021_2022",
+      "kind": "train",
+      "from": "2021.01.01",
+      "to": "2022.12.31"
+    },
+    {
+      "name": "test_2023",
+      "kind": "test",
+      "from": "2023.01.01",
+      "to": "2023.12.31"
+    },
+    {
+      "name": "test_2024",
+      "kind": "test",
+      "from": "2024.01.01",
+      "to": "2024.12.31"
+    }
+  ],
+  "runner": {
+    "mode": "manual",
+    "workDir": ".\\data\\backtests\\runner-50",
+    "manualResultsFile": ".\\data\\backtests\\manual-results-50.csv",
+    "terminalPath": "C:\\KOT MT4 Terminal\\terminal.exe",
+    "mt4Model": "0"
+  },
+  "scoring": {
+    "tradeCountSaturation": 200,
+    "weights": {
+      "profit": 0.25,
+      "drawdown": 0.25,
+      "profitFactor": 0.2,
+      "stability": 0.15,
+      "robustness": 0.1,
+      "tradeCount": 0.05
+    }
+  },
+  "report": {
+    "topN": 50
+  },
+  "capitalSensitivity": {
+    "startBalances": [50]
+  }
+}

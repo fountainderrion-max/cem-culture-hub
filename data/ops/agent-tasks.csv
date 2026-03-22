@@ -1,0 +1,6 @@
+﻿TaskId,Owner,Status,Priority,Area,Summary,InputPath,OutputPath,UpdatedUtc
+TASK-001,Agent-Research,todo,P1,research,Shortlist top EAs by symbol fit,experts/imported,data/backtests/plans/,2026-03-21T22:07:16.8209838Z
+TASK-002,Agent-Backtest,todo,P1,backtest,Run pipeline and publish ranked configs,config/mt4,data/backtests/summary.md,2026-03-21T22:07:16.8549862Z
+TASK-003,Agent-MarketMonitor,done,P1,monitor,Start commodity monitor and verify logging,scripts/monitor-commodities.ps1,data/commodity_prices.csv,2026-03-21T22:58:20.3712372Z
+TASK-004,Agent-Risk,todo,P0,risk,Define max drawdown and stop conditions,data/backtests/results.csv,data/ops/decision-log.md,2026-03-21T22:07:16.8549862Z
+TASK-005,Agent-Execution,done,P0,execution,Harden communicator server for secure exposure,app/server.js,docs/SECURE_SERVER_OPEN_CHECKLIST.md,2026-03-21T22:58:20.3712372Z

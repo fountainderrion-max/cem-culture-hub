@@ -1,0 +1,11 @@
+{
+  "name": "trading-ecosystem-comm-app",
+  "version": "0.1.0",
+  "description": "Minimal social/bot hub prototype for the Trading Ecosystem workspace.",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "start:secure": "node server.js"
+  }
+}

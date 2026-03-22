@@ -1,0 +1,102 @@
+:root {
+  /* Typography */
+  --font-display: "Sora", "Avenir Next", "Segoe UI", sans-serif;
+  --font-body: "Manrope", "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", "Consolas", monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-md: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.375rem;
+  --text-2xl: clamp(1.5rem, 3.5vw, 2.35rem);
+  --text-3xl: clamp(2rem, 5.2vw, 3.2rem);
+
+  --leading-tight: 1.15;
+  --leading-normal: 1.45;
+  --leading-loose: 1.65;
+
+  --weight-regular: 450;
+  --weight-medium: 560;
+  --weight-bold: 700;
+
+  /* Luxury dark palette */
+  --bg-980: #040608;
+  --bg-950: #060b10;
+  --bg-920: #0a1118;
+  --bg-900: #101924;
+  --bg-860: #162231;
+  --bg-820: #1b2b3c;
+
+  --surface-1: rgba(15, 23, 35, 0.78);
+  --surface-2: rgba(19, 29, 44, 0.88);
+  --surface-3: rgba(25, 38, 56, 0.94);
+  --surface-solid: #19283b;
+
+  --line-soft: rgba(155, 184, 214, 0.18);
+  --line-strong: rgba(170, 200, 230, 0.3);
+
+  --text-primary: #ecf3ff;
+  --text-secondary: #bdd0e7;
+  --text-muted: #8ea5bf;
+  --text-dim: #5d7592;
+
+  --emerald-500: #19ba8d;
+  --emerald-400: #3ed8ab;
+  --gold-500: #d7ab57;
+  --gold-400: #f4d58e;
+  --purple-500: #8a63f8;
+  --purple-400: #a68cff;
+  --red-500: #e2677d;
+  --blue-500: #50a7ff;
+
+  --state-success: #29d49c;
+  --state-warning: #ffbe55;
+  --state-danger: #ff728f;
+  --state-info: #6fb7ff;
+
+  --focus-ring: 0 0 0 3px rgba(101, 190, 255, 0.28);
+
+  /* Spacing */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+
+  /* Radius */
+  --radius-xs: 0.4rem;
+  --radius-sm: 0.62rem;
+  --radius-md: 0.88rem;
+  --radius-lg: 1.2rem;
+  --radius-xl: 1.5rem;
+  --radius-pill: 999px;
+
+  /* Elevation */
+  --shadow-1: 0 12px 30px rgba(2, 7, 13, 0.42);
+  --shadow-2: 0 20px 40px rgba(2, 7, 13, 0.5);
+  --shadow-3: 0 30px 60px rgba(1, 5, 10, 0.62);
+  --shadow-glow-emerald: 0 0 0 1px rgba(62, 216, 171, 0.18), 0 18px 44px rgba(22, 153, 116, 0.26);
+  --shadow-glow-gold: 0 0 0 1px rgba(244, 213, 142, 0.2), 0 18px 44px rgba(200, 150, 62, 0.28);
+  --shadow-glow-purple: 0 0 0 1px rgba(166, 140, 255, 0.2), 0 18px 44px rgba(115, 75, 247, 0.28);
+
+  /* Motion */
+  --ease-premium: cubic-bezier(0.22, 0.68, 0.16, 1);
+  --speed-fast: 140ms;
+  --speed-base: 220ms;
+  --speed-slow: 360ms;
+
+  /* Component aliases */
+  --bg: var(--bg-920);
+  --panel: var(--surface-2);
+  --line: var(--line-soft);
+  --text: var(--text-primary);
+  --muted: var(--text-muted);
+  --accent: var(--emerald-500);
+  --warn: var(--state-warning);
+}

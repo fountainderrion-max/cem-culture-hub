@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: trading-ecosystem-app
+    runtime: node
+    rootDir: app
+    buildCommand: "node -v"
+    startCommand: "node server.js"
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: PORT
+        value: 10000
+      - key: HOST
+        value: 0.0.0.0
+      - key: BASE_URL
+        sync: false
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: REQUIRE_MEMBER_LOGIN
+        value: true
+      - key: ALLOW_DEV_LOGIN
+        value: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: GOOGLE_REDIRECT_URI
+        sync: false

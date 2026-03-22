@@ -1,0 +1,14 @@
+{
+  "defaults": {
+    "Lots": [0.01, 0.02, 0.05],
+    "StopLoss": [100, 200],
+    "TakeProfit": [100, 200, 300]
+  },
+  "overrides": {
+    "ExampleEA": {
+      "Lots": [0.01, 0.03],
+      "StopLoss": [80, 120, 200],
+      "TakeProfit": [120, 240]
+    }
+  }
+}

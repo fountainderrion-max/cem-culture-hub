@@ -1,0 +1,39 @@
+{
+  "paths": {
+    "botHeartbeatFile": "C:\\Users\\jaque\\AppData\\Roaming\\MetaQuotes\\Terminal\\Common\\Files\\bot-heartbeats.csv",
+    "dfQuantumTaskFile": ".\\data\\ops\\df-quantum-helper-tasks.csv",
+    "coordinatorLogFile": ".\\data\\ops\\df-quantum-coordinator.log",
+    "coordinatorHeartbeatFile": ".\\data\\ops\\df-quantum-coordinator-heartbeat.json",
+    "stopFile": ".\\data\\ops\\df-quantum-coordinator.stop"
+  },
+  "watchdog": {
+    "intervalSeconds": 5,
+    "heartbeatTimeoutSeconds": 20
+  },
+  "rules": [
+    {
+      "action": "tighten_risk",
+      "priority": 95,
+      "reason": "Drawdown warning: request lower lot sizing and safer management.",
+      "minDrawdownPct": 5.0
+    },
+    {
+      "action": "regime_recheck",
+      "priority": 80,
+      "reason": "Bot requested assistance.",
+      "needsHelpOnly": true
+    },
+    {
+      "action": "spread_guard_assist",
+      "priority": 70,
+      "reason": "Spread/slippage issue detected by bot.",
+      "issueContains": "spread"
+    },
+    {
+      "action": "liquidity_guard_assist",
+      "priority": 70,
+      "reason": "Liquidity issue detected by bot.",
+      "issueContains": "liquidity"
+    }
+  ]
+}

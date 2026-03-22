@@ -1,0 +1,37 @@
+{
+  "symbols": ["XAUUSD"],
+  "timeframes": ["M15"],
+  "defaultDeposit": 50,
+  "splits": [
+    {
+      "name": "live_2024_2025",
+      "kind": "test",
+      "from": "2024.01.01",
+      "to": "2025.12.31"
+    }
+  ],
+  "runner": {
+    "mode": "manual",
+    "workDir": ".\\data\\backtests\\runner-live-50",
+    "manualResultsFile": ".\\data\\backtests\\manual-results-50.csv",
+    "terminalPath": "C:\\KOT MT4 Terminal\\terminal.exe",
+    "mt4Model": "0"
+  },
+  "scoring": {
+    "tradeCountSaturation": 200,
+    "weights": {
+      "profit": 0.3,
+      "drawdown": 0.25,
+      "profitFactor": 0.2,
+      "stability": 0.15,
+      "robustness": 0.05,
+      "tradeCount": 0.05
+    }
+  },
+  "report": {
+    "topN": 53
+  },
+  "capitalSensitivity": {
+    "startBalances": [50]
+  }
+}

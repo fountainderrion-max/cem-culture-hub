@@ -6,6 +6,7 @@ import { fileURLToPath } from "url";
 import { existsSync, readFileSync, promises as fs } from "fs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const ENV_BASE_FILE = path.join(__dirname, ".env");
 const ENV_FILE = path.join(__dirname, ".env.local");
 
 function loadEnvFile(filePath) {
@@ -24,6 +25,7 @@ function loadEnvFile(filePath) {
   }
 }
 
+loadEnvFile(ENV_BASE_FILE);
 loadEnvFile(ENV_FILE);
 
 const PORT = Number(process.env.PORT || 3000);
@@ -56,6 +58,79 @@ const TWILIO_AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN || "";
 const TWILIO_FROM_NUMBER = process.env.TWILIO_FROM_NUMBER || "";
 const TWILIO_TO_NUMBER = process.env.TWILIO_TO_NUMBER || "";
 const TWILIO_WEBHOOK_TOKEN = process.env.TWILIO_WEBHOOK_TOKEN || "";
+
+function envBool(key, fallback = false) {
+  const value = process.env[key];
+  if (typeof value !== "string" || value.length === 0) return fallback;
+  return value.toLowerCase() === "true";
+}
+
+function envNumber(key, fallback = 0) {
+  const value = Number(process.env[key]);
+  return Number.isFinite(value) ? value : fallback;
+}
+
+function safePublicConfig() {
+  return {
+    app: {
+      name: process.env.NEXT_PUBLIC_BRAND_NAME || process.env.APP_NAME || "CEM CULTURE",
+      appUrl: process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || "",
+      siteUrl: process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_APP_URL || "",
+      apiUrl: process.env.NEXT_PUBLIC_API_URL || "",
+      tagline: process.env.NEXT_PUBLIC_BRAND_TAGLINE || "Trade the culture. Link the squad. Rank up."
+    },
+    hero: {
+      mode: process.env.NEXT_PUBLIC_HERO_MODE || "command",
+      primary: process.env.NEXT_PUBLIC_PRIMARY_HERO_CARD || "Bot Arena",
+      secondary: process.env.NEXT_PUBLIC_SECONDARY_HERO_CARD || "Switch Lab",
+      tertiary: process.env.NEXT_PUBLIC_TERTIARY_HERO_CARD || "VPS Forge",
+      support: [
+        process.env.NEXT_PUBLIC_SUPPORT_CARD_1 || "Link Vault",
+        process.env.NEXT_PUBLIC_SUPPORT_CARD_2 || "Culture Feed",
+        process.env.NEXT_PUBLIC_SUPPORT_CARD_3 || "Growth Chamber"
+      ]
+    },
+    roleDefaults: {
+      defaultSignupRole: process.env.DEFAULT_SIGNUP_ROLE || "user",
+      allowSelfProviderSignup: envBool("ALLOW_SELF_PROVIDER_SIGNUP", false),
+      allowSelfOperatorSignup: envBool("ALLOW_SELF_OPERATOR_SIGNUP", false),
+      requireAdminProviderApproval: envBool("REQUIRE_ADMIN_PROVIDER_APPROVAL", true),
+      requireAdminOperatorApproval: envBool("REQUIRE_ADMIN_OPERATOR_APPROVAL", true)
+    },
+    featureFlags: {
+      socialFeed: envBool("FEATURE_SOCIAL_FEED", true),
+      linkVault: envBool("FEATURE_LINK_VAULT", true),
+      botArena: envBool("FEATURE_BOT_ARENA", true),
+      switchLab: envBool("FEATURE_SWITCH_LAB", true),
+      vpsForge: envBool("FEATURE_VPS_FORGE", true),
+      growthChamber: envBool("FEATURE_GROWTH_CHAMBER", true),
+      providerTools: envBool("FEATURE_PROVIDER_TOOLS", true),
+      adminTools: envBool("FEATURE_ADMIN_TOOLS", true)
+    },
+    labels: {
+      simulationEnabled: envBool("ENABLE_SIMULATION_MODE", true),
+      userSuppliedEnabled: envBool("ENABLE_USER_SUPPLIED_MODE", true),
+      simulation: process.env.SIMULATION_BADGE_TEXT || "Simulation",
+      userSupplied: process.env.USER_SUPPLIED_BADGE_TEXT || "User-Supplied",
+      placeholderIntegration: process.env.PLACEHOLDER_INTEGRATION_BADGE_TEXT || "Placeholder Integration"
+    },
+    riskGuardrails: {
+      maxDrawdownPercent: envNumber("MAX_DRAWDOWN_PERCENT", 65),
+      maxDailyLossPercent: envNumber("MAX_DAILY_LOSS_PERCENT", 65),
+      dailyLossCautionPercent: envNumber("DAILY_LOSS_CAUTION_PERCENT", 65),
+      disableNewEntriesAtDailyLimit: envBool("DISABLE_NEW_ENTRIES_AT_DAILY_LIMIT", true),
+      pauseAutomationOnDrawdownBreach: envBool("PAUSE_AUTOMATION_ON_DRAWDOWN_BREACH", true),
+      disableLadderOnDailyLimit: envBool("DISABLE_LADDER_ON_DAILY_LIMIT", true),
+      downgradeScalpingToMonitorOnCaution: envBool("DOWNGRADE_SCALPING_TO_MONITOR_ON_CAUTION", true)
+    },
+    tiers: {
+      cadet: { name: process.env.TIER_CADET_NAME || "Cadet", price: envNumber("TIER_CADET_PRICE", 0) },
+      operator: { name: process.env.TIER_OPERATOR_NAME || "Operator", price: envNumber("TIER_OPERATOR_PRICE", 150) },
+      squadron: { name: process.env.TIER_SQUADRON_NAME || "Squadron", price: envNumber("TIER_SQUADRON_PRICE", 500) },
+      command: { name: process.env.TIER_COMMAND_NAME || "Command", price: envNumber("TIER_COMMAND_PRICE", 0) }
+    }
+  };
+}
 
 if (REQUIRE_API_KEY && !TRADING_APP_API_KEY) {
   console.error("REQUIRE_API_KEY is true but TRADING_APP_API_KEY is missing.");
@@ -1286,6 +1361,11 @@ const requestHandler = async (req, res) => {
 
   if (req.method === "GET" && url.pathname === "/api/health") {
     sendJson(res, 200, { ok: true, ts: new Date().toISOString() });
+    return;
+  }
+
+  if (req.method === "GET" && url.pathname === "/api/public-config") {
+    sendJson(res, 200, safePublicConfig());
     return;
   }
 

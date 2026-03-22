@@ -22,6 +22,7 @@ import { mountSquadsDomain } from "./domains/squads/index.js";
 import { mountSwitchLabDomain } from "./domains/switch-lab/index.js";
 import { mountVpsForge } from "./domains/vps-forge/index.js";
 import { mountGrowthDomain } from "./domains/growth/index.js";
+import { getPublicConfig } from "./core/config.js";
 
 /**
  * @typedef {import("./core/auth.js").AuthContext} AuthContext
@@ -347,6 +348,7 @@ function renderRouteSurface(state, outlet, route, path) {
     return;
   }
   if (normalized === "/app/settings") {
+    const config = getPublicConfig();
     outlet.innerHTML = `
       <section class="mk-page">
         <header class="mk-hero">
@@ -361,8 +363,8 @@ function renderRouteSurface(state, outlet, route, path) {
         </div>
         <article class="mk-card">
           <h3>Apply for Provider / Operator Access</h3>
-          <p>Default signup role is User. Elevated roles require manual admin vetting before War Room access is granted.</p>
-          <div class="chip-row"><span class="chip">User Default</span><span class="chip">Placeholder Integration</span></div>
+          <p>Default signup role is ${escapeHtml(config.roleDefaults.defaultSignupRole)}. Elevated roles require manual admin vetting before War Room access is granted.</p>
+          <div class="chip-row"><span class="chip">${escapeHtml(config.labels.userSupplied)}</span><span class="chip">${escapeHtml(config.labels.placeholderIntegration)}</span></div>
         </article>
       </section>
     `;

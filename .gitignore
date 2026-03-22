@@ -1,5 +1,6 @@
 ﻿# local env / secrets
 app/.env.local
+app/.env
 app/.env.*.local
 
 # runtime data

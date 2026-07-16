@@ -1,11 +1,12 @@
 {
   "name": "trading-ecosystem-comm-app",
-  "version": "0.1.0",
-  "description": "Minimal social/bot hub prototype for the Trading Ecosystem workspace.",
-  "main": "server.js",
+  "version": "0.2.0",
+  "description": "CEM CULTURE social trading operating system with Culture Lane portfolio controls.",
+  "main": "bootstrap-culture.js",
   "type": "module",
   "scripts": {
-    "start": "node server.js",
-    "start:secure": "node server.js"
+    "start": "node bootstrap-culture.js",
+    "start:secure": "node bootstrap-culture.js",
+    "test:culture-lane": "node --test culture-lane/engine.test.js"
   }
 }

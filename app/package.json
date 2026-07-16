@@ -1,12 +1,17 @@
 {
   "name": "trading-ecosystem-comm-app",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "CEM CULTURE social trading operating system with Culture Lane portfolio controls.",
   "main": "bootstrap-culture.js",
   "type": "module",
   "scripts": {
     "start": "node bootstrap-culture.js",
     "start:secure": "node bootstrap-culture.js",
-    "test:culture-lane": "node --test culture-lane/engine.test.js"
+    "test": "node --test culture-lane/*.test.js",
+    "test:culture-lane": "node --test culture-lane/*.test.js"
+  },
+  "dependencies": {
+    "pg": "^8.16.3",
+    "redis": "^5.6.1"
   }
 }

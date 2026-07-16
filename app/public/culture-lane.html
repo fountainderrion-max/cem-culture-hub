@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Culture Lane Mission Control</title>
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    body{margin:0;background:#070b13;color:#eef4ff;font-family:Inter,system-ui,sans-serif}.lane-shell{max-width:1200px;margin:auto;padding:24px}.lane-head,.lane-grid,.lane-actions{display:grid;gap:14px}.lane-head{grid-template-columns:1fr auto;align-items:center}.lane-grid{grid-template-columns:repeat(auto-fit,minmax(180px,1fr));margin:20px 0}.lane-card,.lane-panel{background:rgba(20,29,48,.86);border:1px solid rgba(150,190,255,.16);border-radius:18px;padding:18px;box-shadow:0 18px 50px rgba(0,0,0,.25)}.lane-card strong{display:block;font-size:1.55rem;margin-top:7px}.lane-actions{grid-template-columns:repeat(auto-fit,minmax(145px,1fr))}.lane-actions button,select,input{border-radius:12px;border:1px solid rgba(150,190,255,.24);background:#111a2b;color:#fff;padding:12px}.danger{background:#7f1d2d!important}.primary{background:#174a72!important}.status{font-weight:700}.muted{color:#9eabc0}.progress{height:12px;background:#0b1220;border-radius:999px;overflow:hidden}.progress span{display:block;height:100%;background:linear-gradient(90deg,#3dc6ff,#8cffb3);width:0}.tables{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}pre{white-space:pre-wrap;max-height:360px;overflow:auto}@media(max-width:760px){.tables{grid-template-columns:1fr}.lane-head{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <main class="lane-shell">
+    <section class="lane-head">
+      <div><p class="muted">WISDO PORTFOLIO OPERATING SYSTEM</p><h1>Culture Lane Mission Control</h1><p id="laneName" class="muted">Loading lanes…</p></div>
+      <select id="laneSelect" aria-label="Select Culture Lane"></select>
+    </section>
+
+    <section class="lane-grid">
+      <article class="lane-card">Lane Balance<strong id="balance">$0.00</strong></article>
+      <article class="lane-card">Lane Equity<strong id="equity">$0.00</strong></article>
+      <article class="lane-card">Daily Closed<strong id="closed">$0.00</strong></article>
+      <article class="lane-card">Floating Profit<strong id="floating">$0.00</strong></article>
+      <article class="lane-card">Accounts Online<strong id="online">0 / 0</strong></article>
+      <article class="lane-card">Lane Status<strong id="status" class="status">—</strong></article>
+    </section>
+
+    <section class="lane-panel">
+      <div class="lane-head"><div><h2>Harvest Mode</h2><p id="harvestText" class="muted">Waiting for telemetry.</p></div><strong id="progressText">0%</strong></div>
+      <div class="progress"><span id="progressBar"></span></div>
+      <div class="lane-actions" style="margin-top:16px">
+        <button id="evaluate" class="primary">Evaluate Harvest</button>
+        <button id="harvestNow" class="danger">Harvest Now</button>
+        <button id="pause">Pause Entries</button>
+        <button id="resume">Resume Trading</button>
+      </div>
+    </section>
+
+    <section class="tables">
+      <article class="lane-panel"><h2>Smart Symbol Routing</h2><p class="muted">Reporter inventories automatically map compatible broker symbols. Block a canonical family once instead of typing every broker variation.</p><pre id="symbols">No lane selected.</pre></article>
+      <article class="lane-panel"><h2>Black Box</h2><pre id="blackBox">No events yet.</pre></article>
+      <article class="lane-panel"><h2>Lane DNA</h2><pre id="dna">DNA develops after completed baskets.</pre></article>
+      <article class="lane-panel"><h2>Timeline</h2><pre id="timeline">No events yet.</pre></article>
+    </section>
+  </main>
+  <script type="module" src="/src/culture-lane-mission-control.js"></script>
+</body>
+</html>

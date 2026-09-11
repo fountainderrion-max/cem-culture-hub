@@ -1,11 +1,12 @@
 {
   "name": "trading-ecosystem-comm-app",
-  "version": "0.1.0",
-  "description": "Minimal social/bot hub prototype for the Trading Ecosystem workspace.",
-  "main": "server.js",
+  "version": "0.2.0",
+  "description": "CEM CULTURE social trading operating system with WISDO World immersive ecosystem services.",
+  "main": "launch.js",
   "type": "module",
   "scripts": {
-    "start": "node server.js",
-    "start:secure": "node server.js"
+    "start": "node launch.js",
+    "start:secure": "node launch.js",
+    "start:legacy": "node server.js"
   }
 }

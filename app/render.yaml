@@ -4,7 +4,8 @@ services:
     runtime: node
     rootDir: app
     buildCommand: "node -v"
-    startCommand: "node server.js"
+    startCommand: "node launch.js"
+    healthCheckPath: /api/health
     envVars:
       - key: NODE_VERSION
         value: 20
@@ -26,6 +27,8 @@ services:
         value: true
       - key: ENABLE_USER_SUPPLIED_MODE
         value: true
+      - key: WORLD_ALLOW_DEV_TIER
+        value: false
       - key: BASE_URL
         sync: false
       - key: SESSION_SECRET

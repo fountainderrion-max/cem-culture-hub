@@ -1,0 +1,37 @@
+name: WISDO World Check
+
+on:
+  push:
+    branches:
+      - main
+      - "feature/**"
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  syntax:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Check server and world JavaScript
+        run: |
+          node --check launch.js
+          node --check server.js
+          node --check wisdo-world-bootstrap.js
+          node --check public/src/domains/wisdo-world/world.js
+          node --check public/src/domains/wisdo-world/world-data.js
+          node --check public/src/domains/wisdo-world/world-sync.js
+
+      - name: Smoke import sidecar
+        run: node -e "import('./wisdo-world-bootstrap.js').then(() => console.log('WISDO sidecar import OK'))"

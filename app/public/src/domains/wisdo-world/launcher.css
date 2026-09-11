@@ -1,0 +1,50 @@
+.wisdo-world-launcher {
+  position: fixed;
+  z-index: 999;
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  min-height: 2.9rem;
+  padding: .7rem 1rem;
+  border: 1px solid rgba(92, 211, 255, .42);
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(10, 46, 75, .96), rgba(5, 19, 33, .96));
+  box-shadow: 0 1rem 2.6rem rgba(0, 0, 0, .38), 0 0 1.5rem rgba(48, 185, 255, .16);
+  color: #f2f9ff;
+  font: 800 .72rem/1 var(--font-display, "Segoe UI", sans-serif);
+  letter-spacing: .08em;
+  text-decoration: none;
+  backdrop-filter: blur(14px);
+  transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.wisdo-world-launcher::before {
+  content: "W";
+  width: 1.7rem;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(117, 223, 255, .42);
+  border-radius: 50%;
+  background: rgba(37, 131, 187, .14);
+  color: #79ddff;
+}
+
+.wisdo-world-launcher:hover,
+.wisdo-world-launcher:focus-visible {
+  transform: translateY(-2px);
+  border-color: rgba(114, 224, 255, .76);
+  box-shadow: 0 1.2rem 3rem rgba(0, 0, 0, .44), 0 0 2.1rem rgba(48, 185, 255, .24);
+  outline: none;
+}
+
+@media (max-width: 560px) {
+  .wisdo-world-launcher {
+    right: max(.65rem, env(safe-area-inset-right));
+    bottom: max(.65rem, env(safe-area-inset-bottom));
+    padding: .58rem .78rem;
+    font-size: .64rem;
+  }
+}

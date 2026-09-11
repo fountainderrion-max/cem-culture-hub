@@ -219,16 +219,16 @@ function captureResponse() {
 }
 
 async function resolveMember(req, originalHandler) {
-  const originalUrl = req.url;
   const fake = captureResponse();
+  const authReq = Object.create(req);
+  Object.defineProperty(authReq, "url", { configurable: true, enumerable: true, value: "/api/auth/me" });
+  Object.defineProperty(authReq, "method", { configurable: true, enumerable: true, value: "GET" });
+
   try {
-    req.url = "/api/auth/me";
-    await originalHandler(req, fake);
+    await originalHandler(authReq, fake);
     await fake.done;
   } catch {
     return null;
-  } finally {
-    req.url = originalUrl;
   }
 
   if (fake.statusCode !== 200) return null;
